@@ -13,7 +13,14 @@ use std::fmt::{self, Display, Formatter};
 
 pub fn is_palindrome(s: String) -> bool {
     // TODO: Implement the logic to check if the string is a palindrome
-    false // Placeholder return value
+    let fs: String = s.chars()
+        .filter(|c| c.is_alphabetic())
+        .map(|c| c.to_ascii_lowercase())
+        .collect();
+    let rs: String = fs.chars().rev().collect();
+    println!("fs={} | rs={}", &fs, &rs);
+
+    fs == rs
 }
 
 #[cfg(test)]

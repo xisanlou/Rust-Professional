@@ -10,10 +10,26 @@
 */
 
 use std::fmt::{self, Display, Formatter};
+use std::collections::HashMap;
+use std::cmp::max;
 
 pub fn longest_substring_without_repeating_chars(s: String) -> i32 {
     // TODO: Implement the logic to find the longest substring without repeating characters
-    0 // Placeholder return value
+    let mut char_map: HashMap<char, usize> = HashMap::new();
+    let mut left: usize = 0;
+    let mut max_length: usize = 0;
+    let text: Vec<char> = s.chars().collect();
+    
+    for (i, ch) in text.iter().enumerate() {
+        if let Some(&prev_index) = char_map.get(ch) {
+            if prev_index >= left {
+                left = prev_index + 1;
+            }
+        }
+        char_map.insert(*ch, i);
+        max_length = max(max_length, i - left + 1);
+    }
+    max_length as i32    
 }
 
 #[cfg(test)]

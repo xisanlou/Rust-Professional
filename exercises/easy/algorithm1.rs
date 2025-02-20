@@ -29,13 +29,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: std::cmp::PartialOrd + Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: std::cmp::PartialOrd + Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -69,14 +69,44 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>, mut list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
+		let mut list_c =Self {
             length: 0,
             start: None,
             end: None,
+        };
+
+        let mut index_a = 0;
+        let mut index_b =0;
+
+        loop {
+            let  ref_a = list_a.get(index_a);
+            let  ref_b =list_b.get(index_b);
+            match (ref_a, ref_b) {
+                (None, None) => break,
+                (Some(obj_a), None) =>{
+                    index_a += 1;
+                    list_c.add((*obj_a).clone());
+                },
+                (None, Some(obj_b)) =>{
+                    index_b += 1;
+                    list_c.add((*obj_b).clone());
+                },
+                (Some(obj_a), Some(obj_b)) =>{
+                    if obj_a < obj_b {
+                        index_a += 1;
+                        list_c.add((*obj_a).clone());
+                    } else {
+                        index_b += 1;
+                        list_c.add((*obj_b).clone());
+                    }
+                },
+            };
         }
+
+        list_c
 	}
 }
 

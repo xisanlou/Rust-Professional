@@ -15,7 +15,47 @@ use std::fmt::{self, Display, Formatter};
 
 pub fn merge_intervals(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     // TODO: Implement the logic to merge overlapping intervals
-    Vec::new() // Placeholder return value
+    if intervals.len() < 2 {
+        return intervals;
+    }
+    let mut intervals = intervals;
+    intervals.sort_by(|a, b| {
+        a[0].cmp(&b[0])
+        //if a[0] == b[0] {
+        //    a[1].cmp(&b[1])
+        //} else {
+        //    a[0].cmp(&b[0])
+        //}
+    });
+
+    // 窗口前端推进的循环序号
+    let mut win_it = 0;
+    // 窗口扩展时的循环序号
+    let mut win_extend_it = 0;
+    while win_it < (intervals.len() - 1) {
+        win_extend_it = win_it + 1;
+        // 扩展窗口的end
+        while win_extend_it < intervals.len() && intervals[win_it][1] >= intervals[win_extend_it][0] {
+            // 扩展窗口
+            if intervals[win_it][1] < intervals[win_extend_it][1] {
+                intervals[win_it][1] = intervals[win_extend_it][1];
+            }
+
+            win_extend_it += 1;
+        }
+        win_extend_it -= 1;
+
+        // 删除窗口覆盖的范围
+        while win_extend_it > win_it {
+            intervals.remove(win_extend_it);
+            win_extend_it -= 1;
+        }
+
+        // 推进窗口的start
+        win_it += 1;
+    }
+
+    intervals
 }
 
 #[cfg(test)]
